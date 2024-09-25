@@ -11,7 +11,8 @@ The frontend and API server will start. Access the application at http://localho
 ## Production Mode
 
 ```bash
+nmp install
 npm run build
-npm run server
+npm start
 ```
 The frontend and API server will start. Access the application at http://localhost:3000

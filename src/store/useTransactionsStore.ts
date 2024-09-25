@@ -26,7 +26,7 @@ export const useTransactionStore = create<TransactionsStoreState>()(
     filterValue: '',
     fetchTransactions: async () => {
       try {
-        const response = await fetch('/transactions');
+        const response = await fetch('/api/transactions');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

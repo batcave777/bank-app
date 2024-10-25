@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { theme } from "../../constants";
+import styled from 'styled-components';
+import { theme } from '../../constants';
 
 export const FooterContainer = styled.footer`
   margin-top: 2rem;

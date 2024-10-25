@@ -8,7 +8,10 @@ type TransactionItemProps = {
   onDelete: (transactionId: number) => void;
 };
 
-export const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, onDelete }) => {
+export const TransactionItem: React.FC<TransactionItemProps> = ({
+  transaction,
+  onDelete,
+}) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleRemove = () => {
@@ -39,7 +42,7 @@ export const TransactionItem: React.FC<TransactionItemProps> = ({ transaction, o
       <Button
         $variant="danger"
         aria-label={`Remove transaction: ${transaction.description}`}
-        onClick={handleRemove}        
+        onClick={handleRemove}
       >
         Remove
       </Button>

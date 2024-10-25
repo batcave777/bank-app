@@ -7,9 +7,13 @@ import { ListContainer, List } from './styled';
 
 export const TransactionsList: React.FC = () => {
   const transactions = useTransactionStore((state) => state.transactions);
-  const removeTransaction = useTransactionStore((state) => state.removeTransaction);
+  const removeTransaction = useTransactionStore(
+    (state) => state.removeTransaction
+  );
   const filterValue = useTransactionStore((state) => state.filterValue);
-  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<
+    Transaction[]
+  >([]);
   // State variable to track how many transactions are displayed
   const [displayCount, setDisplayCount] = useState(10);
 

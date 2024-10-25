@@ -8,7 +8,8 @@ export const useInfiniteScroll = (loadMore: () => void) => {
       const element = containerRef.current;
       if (element) {
         const isNearBottom =
-          element.scrollTop + element.clientHeight >= element.scrollHeight - 100;
+          element.scrollTop + element.clientHeight >=
+          element.scrollHeight - 100;
 
         if (isNearBottom) {
           loadMore();

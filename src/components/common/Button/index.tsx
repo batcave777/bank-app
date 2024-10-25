@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyledButton, ButtonProps } from './styled';
 
-type ButtonComponentProps = React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonProps & {
-  children: React.ReactNode;
-};
+type ButtonComponentProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  ButtonProps & {
+    children: React.ReactNode;
+  };
 
 export const Button: React.FC<ButtonComponentProps> = ({
   $variant = 'primary',

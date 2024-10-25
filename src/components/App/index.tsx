@@ -1,10 +1,29 @@
 import { useEffect } from 'react';
-import { Navbar, Balance, Filter, NewTransactionForm, TransactionsList, Footer } from '..';
-import { GlobalStyle, AppContainer, SiteHeader, MainContent, ControlsSection, ColumnsWrapper, Column, TransactionsSection, SiteFooter } from './styled';
+import {
+  Navbar,
+  Balance,
+  Filter,
+  NewTransactionForm,
+  TransactionsList,
+  Footer,
+} from '..';
+import {
+  GlobalStyle,
+  AppContainer,
+  SiteHeader,
+  MainContent,
+  ControlsSection,
+  ColumnsWrapper,
+  Column,
+  TransactionsSection,
+  SiteFooter,
+} from './styled';
 import { useTransactionStore } from '../../store';
 
 export const App = () => {
-  const fetchTransactions = useTransactionStore((state) => state.fetchTransactions);
+  const fetchTransactions = useTransactionStore(
+    (state) => state.fetchTransactions
+  );
 
   useEffect(() => {
     fetchTransactions();
@@ -39,4 +58,4 @@ export const App = () => {
       </AppContainer>
     </>
   );
-}
+};

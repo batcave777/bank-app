@@ -10,7 +10,7 @@ export const Filter: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
-    
+
     // Clear any existing timeout to prevent multiple timeouts
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);

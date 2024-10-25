@@ -6,20 +6,6 @@ import { Button, FormField } from '..';
 import { useTransactionStore } from '../../store';
 import { ErrorMessage, FormContainer, SuccessMessage } from './styled';
 
-type TransactionError = {
-  code: string;
-  message: string;
-};
-
-const isTransactionError = (error: unknown): error is TransactionError => {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    'message' in error
-  );
-};
-
 const transactionSchema = z.object({
   amount: z
     .number({ invalid_type_error: 'Amount is required' })

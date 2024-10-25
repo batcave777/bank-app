@@ -1,20 +1,25 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { TransactionItem } from '..';
+import { Button, TransactionItem } from '..';
+import { useInfiniteScroll } from '../../hooks';
 import { useTransactionStore } from '../../store';
 import { Transaction } from '../../store/useTransactionsStore';
-import { useInfiniteScroll } from '../../hooks';
-import { ListContainer, List } from './styled';
+import { List, ListContainer } from './styled';
 
 export const TransactionsList: React.FC = () => {
   const transactions = useTransactionStore((state) => state.transactions);
+  const fetchTransactions = useTransactionStore(
+    (state) => state.fetchTransactions
+  );
   const removeTransaction = useTransactionStore(
     (state) => state.removeTransaction
   );
   const filterValue = useTransactionStore((state) => state.filterValue);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filteredTransactions, setFilteredTransactions] = useState<
     Transaction[]
   >([]);
-  // State variable to track how many transactions are displayed
   const [displayCount, setDisplayCount] = useState(10);
 
   const loadMore = useCallback(() => {
@@ -27,6 +32,24 @@ export const TransactionsList: React.FC = () => {
   }, [filteredTransactions.length]);
 
   const listContainerRef = useInfiniteScroll(loadMore);
+
+  useEffect(() => {
+    const loadTransactions = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        await fetchTransactions();
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to load transactions'
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadTransactions();
+  }, [fetchTransactions]);
 
   // Reset displayCount when filterValue changes
   useEffect(() => {
@@ -44,6 +67,33 @@ export const TransactionsList: React.FC = () => {
       setFilteredTransactions(filtered);
     }
   }, [transactions, filterValue]);
+
+  if (isLoading) {
+    return (
+      <ListContainer>
+        <h2 id="transactions-title">Transactions List</h2>
+        <p>Loading transactions...</p>
+      </ListContainer>
+    );
+  }
+
+  if (error) {
+    return (
+      <ListContainer>
+        <h2 id="transactions-title">Transactions List</h2>
+        <p>Error: {error}</p>
+        <Button
+          type="submit"
+          $variant="primary"
+          size="large"
+          aria-label="Add transaction"
+          onClick={() => fetchTransactions()}
+        >
+          Retry
+        </Button>
+      </ListContainer>
+    );
+  }
 
   return (
     <ListContainer ref={listContainerRef} aria-labelledby="transactions-title">

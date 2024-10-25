@@ -9,7 +9,7 @@ export type Transaction = {
   address: string;
   date: string;
   description: string;
-}
+};
 
 export type TransactionsStoreState = {
   transactions: Transaction[];
@@ -18,7 +18,7 @@ export type TransactionsStoreState = {
   removeTransaction: (id: number) => void;
   setFilterValue: (value: string) => void;
   addTransaction: (transaction: Transaction) => void;
-}
+};
 
 export const useTransactionStore = create<TransactionsStoreState>()(
   devtools((set) => ({
@@ -38,7 +38,9 @@ export const useTransactionStore = create<TransactionsStoreState>()(
     },
     removeTransaction: (id) => {
       set((state) => ({
-        transactions: state.transactions.filter((transaction) => transaction.id !== id),
+        transactions: state.transactions.filter(
+          (transaction) => transaction.id !== id
+        ),
       }));
     },
     setFilterValue: (value) => set({ filterValue: value }),

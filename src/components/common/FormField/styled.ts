@@ -13,7 +13,8 @@ export const InputLabel = styled.label`
 
 export const Input = styled.input<{ $hasError: boolean }>`
   padding: 0.5rem;
-  border: 1px solid ${({ $hasError }) => ($hasError ? theme.error : theme.border)};
+  border: 1px solid
+    ${({ $hasError }) => ($hasError ? theme.error : theme.border)};
   border-radius: 4px;
   color: ${theme.textPrimary};
   background-color: ${theme.background};

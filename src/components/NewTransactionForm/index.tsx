@@ -1,15 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button, FormField } from '..';
 import { useTransactionStore } from '../../store';
-import { FormContainer, SuccessMessage, ErrorMessage } from './styled';
+import { ErrorMessage, FormContainer, SuccessMessage } from './styled';
+
+type TransactionError = {
+  code: string;
+  message: string;
+};
+
+const isTransactionError = (error: unknown): error is TransactionError => {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    'message' in error
+  );
+};
 
 const transactionSchema = z.object({
-  amount: z.number({ invalid_type_error: 'Amount is required' })
+  amount: z
+    .number({ invalid_type_error: 'Amount is required' })
     .positive('Amount must be positive'),
-  account: z.string()
+  account: z
+    .string()
     .min(1, 'Account number is required')
     .regex(/^\d+$/, 'Account number must contain only numbers'),
   address: z.string().min(1, 'Address is required'),
@@ -17,7 +33,9 @@ const transactionSchema = z.object({
   beneficiary: z.string().min(1, 'Beneficiary is required'),
 });
 
-type TransactionFormData = z.infer<typeof transactionSchema>;
+type TransactionFormData = z.infer<typeof transactionSchema> & {
+  submit?: string;
+};
 
 export const NewTransactionForm: React.FC = () => {
   const addTransaction = useTransactionStore((state) => state.addTransaction);
@@ -26,12 +44,15 @@ export const NewTransactionForm: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
     reset,
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
   });
 
-  const [submissionStatus, setSubmissionStatus] = useState<'success' | 'error' | null>(null);
+  const [submissionStatus, setSubmissionStatus] = useState<
+    'success' | 'error' | null
+  >(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -47,9 +68,9 @@ export const NewTransactionForm: React.FC = () => {
 
   const onSubmit = async (data: TransactionFormData) => {
     try {
-      // Calculate the next ID
       const transactionIds = transactions.map((transaction) => transaction.id);
-      const maxId = transactionIds.length > 0 ? Math.max(...transactionIds) : -1;
+      const maxId =
+        transactionIds.length > 0 ? Math.max(...transactionIds) : -1;
       const newId = maxId + 1;
 
       const newTransaction = {
@@ -60,13 +81,30 @@ export const NewTransactionForm: React.FC = () => {
       addTransaction(newTransaction);
       reset();
       setSubmissionStatus('success');
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error('Transaction creation failed:', error);
+
+      if (error instanceof Error) {
+        setError('submit', {
+          type: 'submit',
+          message: error.message || 'Transaction creation failed',
+        });
+      } else {
+        setError('submit', {
+          type: 'submit',
+          message: 'An unexpected error occurred',
+        });
+      }
+
       setSubmissionStatus('error');
     }
   };
 
   return (
-    <FormContainer onSubmit={handleSubmit(onSubmit)} aria-labelledby="form-title">
+    <FormContainer
+      onSubmit={handleSubmit(onSubmit)}
+      aria-labelledby="form-title"
+    >
       <h2 id="form-title">New Transaction</h2>
 
       <FormField
@@ -124,10 +162,14 @@ export const NewTransactionForm: React.FC = () => {
       </Button>
 
       {submissionStatus === 'success' && (
-        <SuccessMessage role="alert">Transaction added successfully!</SuccessMessage>
+        <SuccessMessage role="alert">
+          Transaction added successfully!
+        </SuccessMessage>
       )}
       {submissionStatus === 'error' && (
-        <ErrorMessage role="alert">An error occurred. Please try again.</ErrorMessage>
+        <ErrorMessage role="alert">
+          An error occurred. Please try again.
+        </ErrorMessage>
       )}
     </FormContainer>
   );

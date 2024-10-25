@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { theme } from "../../constants";
+import styled from 'styled-components';
+import { theme } from '../../constants';
 
 export const BalanceContainer = styled.section`
   margin-bottom: 1rem;
